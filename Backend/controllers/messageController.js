@@ -225,3 +225,67 @@ exports.deleteMessage = async (req, res) => {
     res.status(500).json({ message: 'Server error while deleting message' });
   }
 };
+
+exports.createConversation = async (req, res) => {
+  try {
+    const { participants } = req.body;
+    
+    if (!participants || !Array.isArray(participants) || participants.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Participants array is required' 
+      });
+    }
+
+    // Validate that all participants exist
+    const validParticipants = [];
+    for (const participantId of participants) {
+      const user = await User.findById(participantId);
+      if (user) {
+        validParticipants.push(user);
+      }
+    }
+
+    if (validParticipants.length === 0) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No valid participants found' 
+      });
+    }
+
+    // Create a conversation object (in this case, just return the participants)
+    // Since we're using a simple messaging system, conversations are implicit
+    const conversation = {
+      id: participants[0], // For 1:1 conversations, use the other user's ID
+      participants: [
+        {
+          id: req.user._id,
+          username: req.user.username,
+          email: req.user.email,
+          avatar: req.user.avatar,
+          isOnline: req.user.isOnline
+        },
+        ...validParticipants.map(user => ({
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          avatar: user.avatar,
+          isOnline: user.isOnline
+        }))
+      ],
+      lastMessage: null,
+      unreadCount: 0
+    };
+
+    res.status(201).json({ 
+      success: true, 
+      data: conversation 
+    });
+  } catch (err) {
+    console.error('Create conversation error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Server error while creating conversation' 
+    });
+  }
+};
