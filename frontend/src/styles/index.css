@@ -1,0 +1,5 @@
+/* Main stylesheet with modular imports */
+@import "tailwindcss";
+@import "./fonts.css";
+@import "./components.css";
+@import "./utilities.css";

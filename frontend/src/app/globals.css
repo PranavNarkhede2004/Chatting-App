@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+/* Font stack custom properties */
+:root {
+  --font-stack-sans: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-stack-mono: var(--font-geist-mono), ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-stack-sans);
+  --font-mono: var(--font-stack-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-stack-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Ensure monospace font for code elements */
+code, pre, kbd, samp {
+  font-family: var(--font-stack-mono);
+}
+
+/* Font loading optimization */
+.font-sans {
+  font-family: var(--font-stack-sans);
+}
+
+.font-mono {
+  font-family: var(--font-stack-mono);
+}
